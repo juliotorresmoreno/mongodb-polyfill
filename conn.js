@@ -3,7 +3,6 @@ var Buffer = require('buffer/').Buffer;
 var BSON = require('bson')
 var Long = BSON.Long;
 var bson = new BSON();
-var fs = require("fs");
 
 var adminCommand = Buffer.from("CQEAAH4AAAAAAAAA1AcAAA==", "base64");
 
@@ -16,11 +15,9 @@ module.exports = function (config, callback) {
                     return;
                 }
                 var data;
-                fs.appendFileSync("C:\\Users\\user\\Desktop\\driver\\buffer.txt", new Date() + " conn.request\n");
 
                 conn.setTimeout(500)
                 conn.on('data', function (_data) {
-                    fs.appendFileSync("C:\\Users\\user\\Desktop\\driver\\buffer.txt", new Date() + " data: " + data + "\n");
                     if(data !== undefined) {
                         data = Buffer.concat([data, _data]);
                         return;
@@ -28,7 +25,6 @@ module.exports = function (config, callback) {
                     data = _data;
                 });
                 conn.on('error', function(err) {
-                    fs.appendFileSync("C:\\Users\\user\\Desktop\\driver\\buffer.txt", new Date() + " " + err.message + "\n");
                     this.end();
                     callback(err);
                 });
@@ -39,7 +35,6 @@ module.exports = function (config, callback) {
                         return;
                     }
                     this.end();
-                    fs.appendFileSync("C:\\Users\\user\\Desktop\\driver\\buffer.txt", new Date() + " timeout: " + data + "\n");
                     callback(undefined, bson.deserialize(data.slice(16)));
                 });
                 conn.write(message);
@@ -53,7 +48,6 @@ module.exports = function (config, callback) {
         
     });
     conn.on("error", function(err) {
-        fs.appendFileSync("C:\\Users\\user\\Desktop\\driver\\buffer.txt", new Date() + " " + err.message + "\n");
         callback(err);
     });
 }
